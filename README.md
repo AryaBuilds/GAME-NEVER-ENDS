@@ -1,153 +1,109 @@
-# A Game Never Ends 🎮
+# GAME NEVER ENDS
 
-🔗 **Live Demo:** https://aryabuilds.github.io/GAME-NEVER-ENDS/
+*Live Demo* -https://aryabuilds.github.io/GAME-NEVER-ENDS/
+About the project
+ This is a  game  Endless Survivor
 
-#Table of contents
+In this game you have to survive as long as possible. Bombs and mines come from the top, and you have to move your ship to stay safe if you dont move you die and called loozer 
 
-- [About this project](#about-this-project)
-- [Features](#features)
-- [How to play](#how-to-play)
-- [Tech stack](#tech-stack)
-- [Project structure](#project-structure)
-- [How the difficulty works](#how-the-difficulty-works)
-- [How the music works](#how-the-music-works)
-- [Things worth knowing](#things-worth-knowing)
-- [Future improvements](#future-improvements)
-- [Credits](#credits)
-- [Questions?](#questions)
+There is no ending The game gets harder jitna  you play.
 
-## About this project
+I made this project to learn more about HTML, CSS and JavaScript 
 
-Hi! This is a small browser game I built called **Endless Survivor**. The idea
-was pretty simple — I wanted to make a game that, true to its name, never
-actually ends. There's no "final level" or win screen. You just keep dodging
-bombs and mines for as long as you can, and the game keeps getting harder the
-longer you survive. Your only goal is to beat your own high score.
+Features
+There ARE lot of futures 
+ Endless gameplay
+Bombs and mines
+ Health system
+ Health and score pickups
+ Score system
+ Best score is saved
+ Music and sound effects
+Works with keyboard, mouse and touch
+ Works on desktop and mobile
 
-I built the whole thing from scratch using just HTML, CSS, and JavaScript —
-no game engine, no external libraries, no downloaded images or music files.
-Everything you see and hear (the background, the bombs, even the music) is
-drawn and generated directly by the code.
+ How to play
 
-## Features
+1 Open the game from the live demo.
+2 Click **START GAME**.
+3 Move the ship and avoid the bombs and mines.
+4 Collect the green and yellow orbs.
+5 Try to survive and get a high score.
 
-- ♾️ Truly endless gameplay — no final level, difficulty just keeps climbing
-- 🎨 Fully hand-coded 2D visuals — parallax starfield background, glowing
-  bombs with fuses and sparks, spiky spinning mines
-- 🎵 Live, procedurally generated background music that changes mood as the
-  game gets harder — no audio files used anywhere
-- 💚 Pickup system — heal orbs and bonus-score orbs
-- 🏆 Best score saved automatically between sessions
-- 📱 Works with mouse, keyboard, and touch — playable on desktop and mobile
-- ⚡ Zero dependencies, zero build step — just one HTML file
+ Controls
 
+  What to do    Control                          
+ 
+  Move         Mouse, Touch, WASD or Arrow Keys 
+  Dash         Space or Click                   
+  Pause        P                               
+  Music       Button in the top-right        
 
-> *(Screenshot/GIF coming soon — will add a gameplay preview here.)*
+# 
 
-## How to play
+I used theseS for this project:
 
-1. Open the live link above (or open `endless-survivor.html` directly in your
-   browser).
-2. Click **START GAME**.
-3. Move your ship around to dodge the bombs and mines falling toward you.
-4. Grab the glowing orbs when you can:
-   - 🟢 Green orb → heals you a bit
-   - 🟡 Yellow orb → gives bonus score
-5. Survive as long as possible. Your score keeps climbing automatically, and
-   it climbs faster the longer you last.
-6. When your health bar (Hull Integrity) hits zero, it's game over — but your
-   best score is saved automatically, so you can try to beat it next time.
+HTMl
+ CSSJavaScript
+Canvas Web Audio API
 
-### Controls
+localStorage
 
-| Action | Key / Input |
-|---|---|
-| Move | Mouse, touch drag, or `W A S D` / Arrow keys |
-| Dash (brief invincibility) | `Space` or click |
-| Pause | `P` |
-| Toggle music | 🔊 button, top-right corner |
+I did not use a game engine or any big library.
 
-## Tech stack
+# How to run
 
-I kept this deliberately simple and dependency-free:
+You can play the game from the live demo.
 
-- **HTML** – page structure
-- **CSS** – styling, glow effects, animations, the UI/HUD
-- **JavaScript (vanilla, no frameworks)** – all the game logic
-- **Web Audio API** – the background music and sound effects are generated
-  live in code, there are no `.mp3`/`.wav` files anywhere in this project
-- **localStorage** – saves your best score in the browser so it's there next
-  time you play
+You can also download the project and open index.html in a browser.
 
-There's no build step and nothing to install — it's just a static HTML file.
+Project files
 
-## How to run it locally
+ index.html
+Endless-Survivor.html
+README MD
 
-The easiest way is to just open the live link. But if you want to run it on
-your own machine:
+The main game is inside THE LINK 
 
-**Option 1 — Just open the file**
-Double-click `endless-survivor.html` and it'll open in your default browse
+# Difficulty
 
-## Project structure
+The game gets harder when you SURVIVE LONGER 
 
-```
-.
-├── index.html               # entry point — loads/redirects to the game
-├── endless-survivor.html    # the entire game — HTML, CSS, and JS in one file
-├── README.md                 # you're reading it
-└── LICENSE                   # MIT license
-```
+The enemies become faster and more enemies can apper
 
-I kept the game itself in a single file on purpose, so it stays portable and
-easy to share or copy anywhere without breaking.
+The level also increases when the score increases
 
-## How the difficulty works
+no final level
 
-The difficulty is designed to never stop scaling:
+ Music
 
-- The longer you survive, the faster and more frequent the bombs get.
-- Every 400 points, your **level** goes up, which also increases the chance
-  of tougher spinning mines showing up.
-- There's no upper cap — in theory, if you're good enough, the game just
-  keeps getting more intense forever. That's the whole point of the "never
-  ends" concept.
+I wanted to make the music without using music files thats interesting 
 
-## How the music works
+So I used the Web Audio APi   to create the sounds from JavaScript
 
-This part was fun to build. There are no audio files in this project at all —
-the background music is generated live using the Web Audio API. As you level
-up, the game switches between four different "moods" (Calm → Tense → Hard →
-Extreme), each with its own tempo and tone, so the music escalates along with
-the on-screen danger. Explosions and pickups also trigger small procedural
-sound effects the same way.
+The music changes when the game gets harder
 
-## Things worth knowing
+There are also sounds for things like explosions and pickups 
 
-- Your best score is saved per-browser (via `localStorage`), so it won't
-  carry over if you switch browsers or devices.
-- Because of browser autoplay rules, music only starts after you click
-  **START GAME** — it can't play on its own before that.
-- Tested on Chrome, Edge, and Firefox and works fine on all three. Should
-  work on any modern browser that supports Canvas and Web Audio.
+Saving score
+I took  about 1hour and20 minutes making the music for this  game
 
-## Future improvements
+The best score is saved using LocalStorage
 
-Things I'd like to add if I keep working on this:
+If you open the game again in the same browser, your best score will still be there.
+ 
+ Future ideas
 
-- [ ] More enemy types (lasers, homing missiles)
-- [ ] A proper screenshot/GIF in this README
-- [ ] Mobile-friendly on-screen controls
-- [ ] A global leaderboard instead of just local best score
-- [ ] Boss events at certain score milestones
+If I continue this project, I want to add:
 
-## Credits
-
-Built solo, from scratch, as a learning project. No external assets, icon
-packs, or sound libraries were used — everything is generated by the code
-itself.
+ More enemies ( like CREPPER, ENDERMAN 
+ Boss fights LIKE MINECRAFT ENDERDRAGON 
+  Better mobile controls
+  Online leaderboard 
+AND ETC 
 
 
-## Questions?
 
-DM ** on my insta id aryaman2403 ---https://www.instagram.com/aryaman2403/?hl=en
+If you have any questions, you can DM me on Instagram: PLESE FOOLOW ME I HAVE ONLY 350 FOLLOWERS 
+
+Instagram: https://www.instagram.com/aryaman2403/
