@@ -1,12 +1,12 @@
-Endless Survivo 
+A cat kepp Running and jummp OVER TRISHUL  Gaem nevr endss it get hardar and Harder 
 
-Simple game where you dodging falling bombs with mouse Score keep increasing so long you alive.
-
- Press START for begin. Move mouse, player is following it and bombs is falling from top, avoid them.
-move your mouce to move characters
-
-Features
-Score go up automatically, faster as time passing 
-Best score is saving in yourt browser
-Single file onlt no installing needed
-
+How to plai
+Open game in browsr
+Presss SPAECE or tap screan to JUMMP
+Dont touch the purpl polle or its GEM OVERRRr
+Presss SPAECE Agin  to restrat
+futures
+Nevr ending gaem speeed keeps INcresing 
+Cat charectar with runing legs thats perfect i spent hours to maker this cat billu
+Sometyme  TRISHUL flys in air After scoor 300
+Werks on mobil tooo tap to jummp
