@@ -1,146 +1,152 @@
 <!DOCTYPE html>
-<html><head><title>MY SUPRR GAEM</title>
+<html>
+<head>
+<title>MY SUPRR GAEM</title>
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: #222831;
-  text-align: center;
-  overflow: hidden;
-}
-
-h1 {
-  color: #ffde59;
-  margin: 8px;
-  font-size: 40px;
-}
-
-canvas {
-  display: block;
-  margin: auto;
-  background: #87ceeb;
-  border: 8px dashed #ff5e5e;
-}
-
-#scr {
-  color: #ffde59;
-  font-size: 26px;
-  font-weight: bold;
-}
-
-#msg {
-  color: #ff5e5e;
-  font-size: 20px;
-}
-</style></head>
-<body>
-<h1>MY SUPRR GAEM</h1>
-<div id="scr">ScoRe: 0</div>
-<canvas id="c"></canvas>
+html,body{margin:0;padding:0;height:100%;overflow:hidden;text-align:center;background:#222831}
+h1{color:#ffde59;margin:8px;font-size:40px}
+canvas{display:block;margin:auto;background:#87ceeb}
+#scr{color:#ffde59;font-size:26px;font-weight:bold}
+#msg{color:#ff5e5e;font-size:20px}
+</style>
+</head>
+<h1>MY SUPRR GAEM</h1><div id="scr">ScoRe: 0</div><canvas id="c"></canvas>
+<div id="msg">Presss SPAECE key or TAP screen to JUMMP it get hardar and hardar</div>
 <div id="msg">Presss SPAECE key or TAP screen to JUMMP it get hardar and hardar</div>
 <script>
-var cv=document.getElementById("c"),ctx=cv.getContext("2d"),W,H,grnd;
-var boi={x:50,y:0,w:30,h:30,vy:0,jump:false};
-var grvty=1.5,obs=[],scor=0,ded=false,timr=0;
+var canvas=document.getElementById("c");
+var ctx=canvas.getContext("2d");
+var W,H,ground;
+var cat={x:50,y:0,w:30,h:30,vy:0,jump:false};
+var obstacles=[],score=0,dead=false,frame=0;
 
-function fitScrn(){
-  W=window.innerWidth-40; H=window.innerHeight-140;
-  cv.width=W; cv.height=H; grnd=H-60; boi.y=grnd-boi.h;
-}
-window.addEventListener("resize",fitScrn);
-
-function baseSpd(){ return 6+scor*0.012; }
-function baseGap(){ var g=95-scor*0.05; return g<28?28:g; }
-
-function newObs(){
-  if(scor>300 && Math.random()<0.35){ obs.push({x:W,y:grnd-100-Math.random()*40,w:24,h:20}); }
-  else{ var h=20+Math.random()*40; obs.push({x:W,y:grnd-h,w:20,h:h}); }
+function resize(){
+ W=innerWidth-40;
+ H=innerHeight-140;
+ canvas.width=W;
+ canvas.height=H;
+ ground=H-60;
+ cat.y=ground-cat.h;
 }
 
-function drawObs(o){
-  var x=o.x,y=o.y,w=o.w,h=o.h;
-  ctx.fillStyle="#9b5de5"; ctx.fillRect(x,y,w,h);
-  ctx.fillStyle="#5c2e91";
-  for(var t=0;t<Math.floor(h/14);t++){
-    var ty=y+8+t*14;
-    ctx.beginPath(); ctx.moveTo(x,ty); ctx.lineTo(x-7,ty+5); ctx.lineTo(x,ty+10); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(x+w,ty); ctx.lineTo(x+w+7,ty+5); ctx.lineTo(x+w,ty+10); ctx.fill();
+function speed(){return 6+score*.012}
+function gap(){var g=95-score*.05;return g<28?28:g}
+
+function addObstacle(){
+ if(score>300&&Math.random()<.35){
+  obstacles.push({x:W,y:ground-100-Math.random()*40,w:24,h:20});
+ }else{
+  var h=20+Math.random()*40;
+  obstacles.push({x:W,y:ground-h,w:20,h:h});
+ }
+}
+
+function drawObstacle(o){
+ var x=o.x,y=o.y,w=o.w,h=o.h;
+ ctx.fillStyle="#9b5de5";
+ ctx.fillRect(x,y,w,h);
+
+ ctx.fillStyle="#5c2e91";
+ for(var i=0;i<Math.floor(h/14);i++){
+  var y2=y+8+i*14;
+  ctx.beginPath();
+  ctx.moveTo(x,y2);ctx.lineTo(x-7,y2+5);ctx.lineTo(x,y2+10);ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(x+w,y2);ctx.lineTo(x+w+7,y2+5);ctx.lineTo(x+w,y2+10);ctx.fill();
+ }
+
+ var m=x+w/2;
+ ctx.strokeStyle="#e0c200";
+ ctx.fillStyle="#e0c200";
+ ctx.lineWidth=3;
+ ctx.beginPath();ctx.moveTo(m,y);ctx.lineTo(m,y-26);ctx.stroke();
+ ctx.beginPath();ctx.moveTo(m-10,y-16);ctx.lineTo(m-10,y-2);ctx.stroke();
+ ctx.beginPath();ctx.moveTo(m+10,y-16);ctx.lineTo(m+10,y-2);ctx.stroke();
+ ctx.beginPath();ctx.moveTo(m,y-26);ctx.lineTo(m-4,y-18);ctx.lineTo(m+4,y-18);ctx.fill();
+ ctx.beginPath();ctx.moveTo(m-10,y-16);ctx.lineTo(m-14,y-8);ctx.lineTo(m-6,y-8);ctx.fill();
+ ctx.beginPath();ctx.moveTo(m+10,y-16);ctx.lineTo(m+6,y-8);ctx.lineTo(m+14,y-8);ctx.fill();
+}
+
+function drawCat(x,y,w,h,t){
+ ctx.fillStyle="#ff914d";ctx.fillRect(x,y+8,w,h-8);
+ ctx.beginPath();ctx.moveTo(x+4,y+8);ctx.lineTo(x+9,y-6);ctx.lineTo(x+14,y+8);ctx.fill();
+ ctx.beginPath();ctx.moveTo(x+w-14,y+8);ctx.lineTo(x+w-9,y-6);ctx.lineTo(x+w-4,y+8);ctx.fill();
+ ctx.strokeStyle="#ff914d";ctx.lineWidth=6;
+ ctx.beginPath();ctx.moveTo(x,y+h-6);ctx.quadraticCurveTo(x-16,y+h-14,x-10,y+h-26);ctx.stroke();
+ ctx.strokeStyle="#222831";ctx.lineWidth=1;
+ ctx.beginPath();ctx.moveTo(x+w-2,y+16);ctx.lineTo(x+w+10,y+13);
+ ctx.moveTo(x+w-2,y+19);ctx.lineTo(x+w+10,y+19);ctx.stroke();
+ ctx.fillStyle="#222831";ctx.fillRect(x+w-9,y+11,3,3);
+ var step=Math.floor(t/6)%2==0;
+ ctx.fillStyle="#d9732b";
+ if(step){
+  ctx.fillRect(x+3,y+h,5,7);ctx.fillRect(x+w-9,y+h-3,5,7);
+ }else{
+  ctx.fillRect(x+3,y+h-3,5,7);ctx.fillRect(x+w-9,y+h,5,7);
+ }
+}
+
+function jump(){
+ if(!cat.jump&&!dead){cat.vy=-19;cat.jump=true}
+ else if(dead)reset();
+}
+
+function reset(){
+ dead=false;score=0;obstacles=[];cat.y=ground-cat.h;cat.vy=0;frame=0;
+ document.getElementById("msg").innerHTML="Presss SPAECE key or TAP screen to JUMMP it get hardar and hardar";
+}
+
+function game(){
+ if(dead)return;
+ frame++;
+ ctx.clearRect(0,0,W,H);
+
+ ctx.fillStyle="#a2d5f2";ctx.fillRect(0,0,W,ground);
+ ctx.fillStyle="#ffde59";ctx.beginPath();ctx.arc(W-60,50,25,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle="#6ab04c";ctx.fillRect(0,ground,W,H-ground);
+ ctx.fillStyle="#4b7a34";ctx.fillRect(0,ground,W,8);
+
+ cat.vy+=1.5;
+ cat.y+=cat.vy;
+ if(cat.y>ground-cat.h){
+  cat.y=ground-cat.h;cat.vy=0;cat.jump=false;
+ }
+ drawCat(cat.x,cat.y,cat.w,cat.h,frame);
+
+ var move=speed();
+ if(frame%Math.round(gap())==0)addObstacle();
+
+ for(var i=0;i<obstacles.length;i++){
+  var o=obstacles[i];
+  o.x-=move;
+  drawObstacle(o);
+
+  if(cat.x<o.x+o.w&&cat.x+cat.w>o.x&&cat.y<o.y+o.h&&cat.y+cat.h>o.y){
+   dead=true;
+   document.getElementById("msg").innerHTML="GEM OVERRR yuo lossed. Presss SPAECE agian";
   }
-  var mx=x+w/2;
-  ctx.strokeStyle="#e0c200"; ctx.fillStyle="#e0c200"; ctx.lineWidth=3;
-  ctx.beginPath(); ctx.moveTo(mx,y); ctx.lineTo(mx,y-26); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(mx-10,y-16); ctx.lineTo(mx-10,y-2); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(mx+10,y-16); ctx.lineTo(mx+10,y-2); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(mx,y-26); ctx.lineTo(mx-4,y-18); ctx.lineTo(mx+4,y-18); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(mx-10,y-16); ctx.lineTo(mx-14,y-8); ctx.lineTo(mx-6,y-8); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(mx+10,y-16); ctx.lineTo(mx+6,y-8); ctx.lineTo(mx+14,y-8); ctx.fill();
+ }
+
+ obstacles=obstacles.filter(function(o){return o.x>-30});
+ score++;
+
+ var level=1+Math.floor(score/150);
+ document.getElementById("scr").innerHTML="ScoRe: "+score+"  LevL: "+level+"  SpeeD: "+move.toFixed(1);
 }
 
-function drawBilli(x,y,w,h,t){
-  ctx.fillStyle="#ff914d"; ctx.fillRect(x,y+8,w,h-8);
-  ctx.beginPath(); ctx.moveTo(x+4,y+8); ctx.lineTo(x+9,y-6); ctx.lineTo(x+14,y+8); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(x+w-14,y+8); ctx.lineTo(x+w-9,y-6); ctx.lineTo(x+w-4,y+8); ctx.fill();
-  ctx.strokeStyle="#ff914d"; ctx.lineWidth=6;
-  ctx.beginPath(); ctx.moveTo(x,y+h-6); ctx.quadraticCurveTo(x-16,y+h-14,x-10,y+h-26); ctx.stroke();
-  ctx.strokeStyle="#222831"; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(x+w-2,y+16); ctx.lineTo(x+w+10,y+13);
-  ctx.moveTo(x+w-2,y+19); ctx.lineTo(x+w+10,y+19); ctx.stroke();
-  ctx.fillStyle="#222831"; ctx.fillRect(x+w-9,y+11,3,3);
-  var lg=Math.floor(t/6)%2==0; ctx.fillStyle="#d9732b";
-  if(lg){ ctx.fillRect(x+3,y+h,5,7); ctx.fillRect(x+w-9,y+h-3,5,7); }
-  else{ ctx.fillRect(x+3,y+h-3,5,7); ctx.fillRect(x+w-9,y+h,5,7); }
-}
+document.addEventListener("keydown",function(e){
+ if(e.code=="Space"||e.key==" "){
+  e.preventDefault();
+  jump();
+ }
+});
 
-function doJump(){
-  if(!boi.jump && !ded){ boi.vy=-19; boi.jump=true; }
-  if(ded){ resett(); }
-}
+canvas.addEventListener("mousedown",jump);
+canvas.addEventListener("touchstart",function(e){e.preventDefault();jump()});
+window.addEventListener("resize",resize);
 
-function StArttt(){
-  document.addEventListener("keydown",function(e){
-    if(e.code=="Space" || e.key==" "){ e.preventDefault(); doJump(); }
-  });
-  cv.addEventListener("mousedown",doJump);
-  cv.addEventListener("touchstart",function(e){ e.preventDefault(); doJump(); });
-  fitScrn();
-  setInterval(loop,1000/60);
-}
-
-function resett(){
-  ded=false; scor=0; obs=[]; boi.y=grnd-boi.h; boi.vy=0; timr=0;
-  document.getElementById("msg").innerHTML="Presss SPAECE key or TAP screen to JUMMP it get hardar and hardar";
-}
-
-function loop(){
-  if(ded) return;
-  timr++;
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle="#a2d5f2"; ctx.fillRect(0,0,W,grnd);
-  ctx.fillStyle="#ffde59"; ctx.beginPath(); ctx.arc(W-60,50,25,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle="#6ab04c"; ctx.fillRect(0,grnd,W,H-grnd);
-  ctx.fillStyle="#4b7a34"; ctx.fillRect(0,grnd,W,8);
-
-  boi.vy+=grvty; boi.y+=boi.vy;
-  if(boi.y>grnd-boi.h){ boi.y=grnd-boi.h; boi.vy=0; boi.jump=false; }
-  drawBilli(boi.x,boi.y,boi.w,boi.h,timr);
-
-  var spd=baseSpd(),gapp=baseGap();
-  if(timr%Math.round(gapp)==0){ newObs(); }
-
-  for(var i=0;i<obs.length;i++){
-    obs[i].x-=spd; drawObs(obs[i]);
-    if(boi.x<obs[i].x+obs[i].w && boi.x+boi.w>obs[i].x && boi.y<obs[i].y+obs[i].h && boi.y+boi.h>obs[i].y){
-      ded=true;
-      document.getElementById("msg").innerHTML="GEM OVERRR yuo lossed. Presss SPAECE agian";
-    }
-  }
-  obs=obs.filter(function(o){return o.x>-30;});
-
-  scor++;
-  var lvl=1+Math.floor(scor/150);
-  document.getElementById("scr").innerHTML="ScoRe: "+scor+"  LevL: "+lvl+"  SpeeD: "+spd.toFixed(1);
-}
-StArttt();
+resize();
+setInterval(game,1000/60);
 </script>
-</body></html>
+</body>
+</html>
