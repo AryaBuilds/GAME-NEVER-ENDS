@@ -1,0 +1,12 @@
+{
+  "name": "canara-print-web",
+  "version": "2.0.0",
+  "description": "Canara Print (browser version) - Developed By Aryaman Digital Studio",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=20.9.0" },
+  "dependencies": {
+    "pdf-lib": "1.17.1",
+    "sharp": "^0.35.4"
+  }
+}

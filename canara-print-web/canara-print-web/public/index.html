@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canara Print</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+<style>
+  :root{--navy:#000080;--blue:#2563eb;--green:#10b981;--yellow:#ffd700;--bg:#f3f5fb;--ink:#1e293b;--mute:#64748b}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+  header{background:var(--navy);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px}
+  header .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#ffd700,#f97316);display:grid;place-items:center;font-weight:800;color:var(--navy)}
+  header h1{font-size:20px;margin:0}
+  main{max-width:520px;margin:0 auto;padding:16px}
+  .card{background:#fff;border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  h2{font-size:15px;margin:0 0 10px}
+  .pick{display:block;border:2px dashed var(--blue);border-radius:12px;padding:22px;text-align:center;color:var(--blue);font-weight:600;cursor:pointer}
+  .pick small{display:block;color:var(--mute);font-weight:400;margin-top:4px}
+  input[type=file]{display:none}
+  .files{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+  .f{position:relative;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#f8fafc;aspect-ratio:3/4;display:grid;place-items:center}
+  .f img{width:100%;height:100%;object-fit:cover}
+  .f .pdf{font-size:30px}
+  .f .nm{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);color:#fff;font-size:10px;padding:2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .f button{position:absolute;top:4px;border:0;border-radius:6px;width:26px;height:26px;font-size:13px;cursor:pointer}
+  .f .x{right:4px;background:#ef4444;color:#fff}
+  .f .c{left:4px;background:var(--yellow)}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+  .opt{flex:1;min-width:120px}
+  .opt input{display:none}
+  .opt span{display:block;text-align:center;padding:10px;border:2px solid #e2e8f0;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer}
+  .opt input:checked+span{border-color:var(--blue);background:#eff6ff;color:var(--blue)}
+  label.t{display:block;font-size:13px;color:var(--mute);margin:12px 0 4px}
+  input[type=text],input[type=number]{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px}
+  .sw{display:flex;align-items:center;gap:10px;font-size:14px;margin-top:12px}
+  .go{width:100%;border:0;background:var(--green);color:#fff;font-size:17px;font-weight:700;padding:15px;border-radius:12px;cursor:pointer}
+  .go:disabled{background:#94a3b8}
+  .bar{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin-top:10px;display:none}
+  .bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .2s}
+  .err{color:#dc2626;font-size:14px;margin-top:10px}
+  .done{text-align:center}
+  .done .code{font-size:46px;font-weight:800;letter-spacing:6px;color:var(--navy);margin:8px 0}
+  .st{padding:8px 14px;border-radius:20px;display:inline-block;font-weight:600;background:#fef9c3}
+  .st.ok{background:#d1fae5;color:#047857}
+  footer{text-align:center;color:var(--mute);font-size:12px;padding:6px 0 24px}
+  #cm{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;flex-direction:column;z-index:10}
+  #cm .box{flex:1;min-height:0;padding:10px}
+  #cm .box img{max-width:100%;display:block}
+  #cm .bt{display:flex;gap:10px;padding:12px}
+  #cm .bt button{flex:1;padding:13px;border:0;border-radius:10px;font-weight:700;font-size:15px}
+</style>
+</head>
+<body>
+<header><div class="logo">CP</div><h1>Canara Print</h1></header>
+<main>
+  <div id="form">
+    <div class="card">
+      <label class="pick" for="inp">📤 Document / Photo / PDF chuniye<small>Photo khinch kar bhi bhej sakte ho — auto crop &amp; enhance hoga</small></label>
+      <input id="inp" type="file" accept="image/*,application/pdf" multiple>
+      <div class="files" id="files"></div>
+    </div>
+
+    <div class="card">
+      <h2>Print ka tarika</h2>
+      <div class="row">
+        <label class="opt"><input type="radio" name="color" value="bw" checked><span>⚫ Black &amp; White</span></label>
+        <label class="opt"><input type="radio" name="color" value="color"><span>🎨 Color</span></label>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <label class="opt"><input type="radio" name="side" value="1" checked><span>Single side</span></label>
+        <label class="opt"><input type="radio" name="side" value="2"><span>Double side</span></label>
+      </div>
+      <label class="t">Copies</label>
+      <input type="number" id="copies" min="1" max="50" value="1">
+      <label class="t">Aapka naam</label>
+      <input type="text" id="name" maxlength="40" placeholder="Naam likhiye">
+      <label class="sw"><input type="checkbox" id="enh" checked> ✨ Auto crop + enhance (scanner jaisa saaf)</label>
+    </div>
+
+    <button class="go" id="go" disabled>Print ke liye bhejo</button>
+    <div class="bar" id="bar"><i></i></div>
+    <div class="err" id="err"></div>
+    <p style="color:#64748b;font-size:12px;text-align:center">Pehli baar thoda time lag sakta hai (1 minute tak). Page band mat kijiye.</p>
+  </div>
+
+  <div id="ok" class="card done" style="display:none">
+    <h2>✅ File bhej di gayi!</h2>
+    <div>Dukaan par ye code batayiye</div>
+    <div class="code" id="code"></div>
+    <div id="pg" style="color:#64748b"></div>
+    <p><span class="st" id="st">⏳ Print ka intezaar...</span></p>
+    <button class="go" style="background:var(--blue)" onclick="location.reload()">Aur file bhejo</button>
+  </div>
+  <footer>Developed By Aryaman Digital Studio</footer>
+</main>
+
+<div id="cm">
+  <div class="box"><img id="cimg"></div>
+  <div class="bt"><button id="cc" style="background:#e2e8f0">Cancel</button><button id="ca" style="background:#10b981;color:#fff">Crop karo ✓</button></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js" onerror="void 0"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+let list = []; // {file, url}
+const isPdf = (f) => f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
+
+$('inp').onchange = (e) => {
+  for (const f of e.target.files) if (list.length < 15) list.push({ file: f, url: isPdf(f) ? null : URL.createObjectURL(f) });
+  e.target.value = '';
+  render();
+};
+
+function render() {
+  const box = $('files');
+  box.innerHTML = '';
+  list.forEach((it, i) => {
+    const d = document.createElement('div');
+    d.className = 'f';
+    if (it.url) { const im = document.createElement('img'); im.src = it.url; d.appendChild(im); }
+    else { const p = document.createElement('div'); p.className = 'pdf'; p.textContent = '📄'; d.appendChild(p); }
+    const nm = document.createElement('div'); nm.className = 'nm'; nm.textContent = it.file.name; d.appendChild(nm);
+    const x = document.createElement('button'); x.className = 'x'; x.textContent = '✕';
+    x.onclick = () => { list.splice(i, 1); render(); }; d.appendChild(x);
+    if (it.url && window.Cropper) {
+      const c = document.createElement('button'); c.className = 'c'; c.textContent = '✂';
+      c.onclick = () => openCrop(i); d.appendChild(c);
+    }
+    box.appendChild(d);
+  });
+  $('go').disabled = !list.length;
+}
+
+// manual crop (optional)
+let cropper, cropIdx;
+function openCrop(i) {
+  cropIdx = i;
+  $('cimg').src = list[i].url;
+  $('cm').style.display = 'flex';
+  if (cropper) cropper.destroy();
+  cropper = new Cropper($('cimg'), { viewMode: 1, autoCropArea: 1, background: false });
+}
+$('cc').onclick = () => { $('cm').style.display = 'none'; cropper.destroy(); cropper = null; };
+$('ca').onclick = () => {
+  cropper.getCroppedCanvas({ maxWidth: 3000, maxHeight: 3000 }).toBlob((b) => {
+    const old = list[cropIdx];
+    const f = new File([b], old.file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' });
+    list[cropIdx] = { file: f, url: URL.createObjectURL(f) };
+    $('cm').style.display = 'none'; cropper.destroy(); cropper = null; render();
+  }, 'image/jpeg', 0.92);
+};
+
+// shrink big phone photos before upload (saves mobile data); falls back to original on any problem
+async function shrink(file) {
+  if (isPdf(file) || !/^image\//.test(file.type)) return file;
+  try {
+    const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    const k = Math.min(1, 2800 / Math.max(bmp.width, bmp.height));
+    if (k === 1 && file.size < 1.5 * 1024 * 1024) return file;
+    const c = document.createElement('canvas');
+    c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(bmp, 0, 0, c.width, c.height);
+    const blob = await new Promise((r) => c.toBlob(r, 'image/jpeg', 0.9));
+    return blob ? new File([blob], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' }) : file;
+  } catch (_) { return file; }
+}
+
+$('go').onclick = async () => {
+  $('go').disabled = true; $('err').textContent = '';
+  $('go').textContent = 'Taiyar ho raha hai...';
+  const fd = new FormData();
+  for (const it of list) { const f = await shrink(it.file); fd.append('files', f, f.name); }
+  $('go').textContent = 'Print ke liye bhejo';
+  fd.append('color', document.querySelector('[name=color]:checked').value);
+  fd.append('duplex', document.querySelector('[name=side]:checked').value === '2' ? '1' : '0');
+  fd.append('copies', $('copies').value || '1');
+  fd.append('name', $('name').value.trim() || 'Customer');
+  fd.append('enhance', $('enh').checked ? '1' : '0');
+  $('bar').style.display = 'block';
+  const x = new XMLHttpRequest();
+  x.open('POST', '/api/upload');
+  x.upload.onprogress = (e) => { if (e.lengthComputable) $('bar').firstElementChild.style.width = (e.loaded / e.total * 90) + '%'; };
+  x.onload = () => {
+    let r = {}; try { r = JSON.parse(x.responseText); } catch (_) {}
+    if (x.status === 200) return success(r);
+    $('err').textContent = r.error || 'Kuch gadbad hui, dobara try karo';
+    $('go').disabled = false; $('bar').style.display = 'none';
+  };
+  x.timeout = 300000;
+  x.ontimeout = () => { $('err').textContent = 'Bahut der lag gayi, dobara try karo'; $('go').disabled = false; $('bar').style.display = 'none'; };
+  x.onerror = () => { $('err').textContent = 'Internet check karo aur dobara try karo'; $('go').disabled = false; $('bar').style.display = 'none'; };
+  x.send(fd);
+};
+
+function success(r) {
+  $('form').style.display = 'none'; $('ok').style.display = 'block';
+  $('code').textContent = r.code; $('pg').textContent = r.pages + ' page';
+  const t = setInterval(async () => {
+    try {
+      const s = await (await fetch('/api/status/' + r.id)).json();
+      if (s.status === 'printed') { $('st').textContent = '🖨️ Print ho gaya! Dukaan se le lijiye'; $('st').className = 'st ok'; clearInterval(t); }
+      else if (s.status === 'rejected') { $('st').textContent = '❌ Dukaandar ne reject kiya'; clearInterval(t); }
+    } catch (_) {}
+  }, 4000);
+}
+</script>
+</body>
+</html>

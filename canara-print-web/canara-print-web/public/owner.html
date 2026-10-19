@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Canara Print - Shop Owner</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{font-family:"Segoe UI",system-ui,sans-serif;color:#1e293b;background:#f8fafc;display:flex;flex-direction:column}
+  header{background:#000080;min-height:68px;display:flex;align-items:center;flex-wrap:wrap;padding:8px 16px;gap:10px;flex:none}
+  .logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#ffd700,#f97316);display:grid;place-items:center;font-weight:800;color:#000080}
+  header h1{color:#fff;font-size:24px;margin:0;flex:1;min-width:170px}
+  header h1 small{display:block;font-size:11px;font-weight:400;opacity:.7}
+  .btn{border:0;padding:11px 18px;font-size:15px;font-weight:700;cursor:pointer;color:#fff;border-radius:3px;font-family:inherit}
+  .y{background:#ffd700;color:#000;outline:2px solid #000;outline-offset:-2px}
+  .b{background:#2563eb}.g{background:#10b981}.i{background:#4361d8}.r{background:#ef4444}
+  .btn:hover{filter:brightness(1.1)}
+  .btn:disabled{opacity:.5;cursor:wait}
+  #linkbar{flex:none;background:#eef2ff;color:#3730a3;padding:7px 16px;font-size:14px;word-break:break-all}
+  main{flex:1;overflow:auto;padding:16px}
+  .empty{height:100%;min-height:240px;display:grid;place-items:center;text-align:center;color:#64748b;font-size:17px;line-height:1.7}
+  .o{background:#fff;border-radius:12px;padding:14px 18px;margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  .code{font-size:28px;font-weight:800;color:#000080;letter-spacing:3px;min-width:100px}
+  .info{flex:1;min-width:200px}
+  .info b{font-size:17px}
+  .tags span{display:inline-block;background:#eef2ff;color:#3730a3;border-radius:20px;padding:2px 10px;font-size:12px;margin:5px 5px 0 0;font-weight:600}
+  .tags .col{background:#fce7f3;color:#9d174d}
+  .acts{display:flex;gap:8px}
+  .acts .btn{padding:10px 16px;border-radius:8px}
+  footer{flex:none;border-top:1px solid #e2e8f0;padding:6px 14px;font-size:13px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#fff}
+  footer b{color:#2563eb}
+  #login{position:fixed;inset:0;background:#f1f5f9;display:none;place-items:center;z-index:20}
+  .box{background:#fff;border-radius:14px;padding:26px;width:340px;max-width:92vw;box-shadow:0 4px 18px rgba(0,0,0,.12);text-align:center}
+  .box h2{margin:0 0 4px;color:#000080}
+  .box input{width:100%;padding:12px;font-size:20px;text-align:center;letter-spacing:6px;border:1px solid #cbd5e1;border-radius:10px;margin:14px 0}
+  .err{color:#dc2626;font-size:14px;min-height:20px}
+  #ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;place-items:center;z-index:30}
+  .dlg{background:#fff;width:560px;max-width:94vw;border-radius:10px;padding:20px;max-height:92vh;overflow:auto}
+  .dlg h2{margin:0 0 10px}
+  .dlg .row{display:flex;gap:10px;margin-top:16px}.dlg .row .btn{flex:1;border-radius:6px}
+  .dlg code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:13px;word-break:break-all}
+  .dlg label.ck{display:flex;gap:8px;align-items:center;margin-top:12px;font-weight:600}
+  #printbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:3px solid #10b981;padding:12px 16px;gap:10px;align-items:center;flex-wrap:wrap;z-index:25;box-shadow:0 -4px 14px rgba(0,0,0,.15)}
+  #printbar span{flex:1;min-width:200px;font-weight:600}
+  #printArea{display:none}
+
+  @media print{
+    @page{size:A4;margin:0}
+    @page land{size:A4 landscape;margin:0}
+    html,body{height:auto;background:#fff;display:block}
+    body>*:not(#printArea){display:none!important}
+    #printArea{display:block}
+    #printArea img{display:block;width:210mm;height:296mm;object-fit:contain;page-break-after:always;break-after:page}
+    #printArea img.land{page:land;width:297mm;height:209mm}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">CP</div>
+  <h1><span id="shop">Canara Print</span><small>Shop Owner Dashboard</small></h1>
+  <button class="btn y" id="bRef">⟳ Refresh Orders</button>
+  <button class="btn g" id="bQr">▦ Print Your QR</button>
+  <button class="btn b" id="bHelp">⚙ Print Settings</button>
+  <button class="btn i" id="bOut">Logout</button>
+</header>
+<div id="linkbar">Customer link: <b id="linkUrl"></b></div>
+<main id="list"><div class="empty">Load ho raha hai...</div></main>
+<footer><span id="status">Taiyar.</span><b>Developed By Aryaman Digital Studio</b></footer>
+
+<div id="printbar"><span id="pbText"></span><button class="btn g" id="pbDone">✅ Print ho gaya</button><button class="btn b" id="pbAgain">🖨 Dobara print</button><button class="btn r" id="pbCancel">Cancel</button></div>
+<div id="printArea"></div>
+
+<div id="login"><div class="box">
+  <div class="logo" style="margin:0 auto 8px;width:52px;height:52px;font-size:20px">CP</div>
+  <h2>Canara Print</h2><div style="color:#64748b;font-size:14px">Shop Owner Login</div>
+  <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="PIN">
+  <div class="err" id="loginErr"></div>
+  <button class="btn b" id="loginGo" style="width:100%;border-radius:8px">Login</button>
+  <div style="margin-top:14px;font-size:12px;color:#94a3b8">Developed By Aryaman Digital Studio</div>
+</div></div>
+
+<div id="ov"><div class="dlg" id="dlg"></div></div>
+
+<script src="/vendor/qr.js"></script>
+<script type="module">
+import * as pdfjs from '/vendor/pdf.min.mjs';
+pdfjs.GlobalWorkerOptions.workerSrc = '/vendor/pdf.worker.min.mjs';
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const setStatus = (t) => { $('status').textContent = t; };
+const get = (k, d) => { try { const v = localStorage.getItem('cp_' + k); return v === null ? d : v; } catch (_) { return d; } };
+const put = (k, v) => { try { localStorage.setItem('cp_' + k, v); } catch (_) {} };
+
+$('linkUrl').textContent = location.origin + '/';
+
+// ---------------- API
+async function api(path, opt) {
+  const r = await fetch(path, opt);
+  if (r.status === 401) { showLogin(); throw new Error('login'); }
+  return r;
+}
+const post = (p, body) => api(p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+
+// ---------------- login
+function showLogin() { $('login').style.display = 'grid'; setTimeout(() => $('pin').focus(), 50); }
+async function doLogin() {
+  $('loginErr').textContent = '';
+  const r = await fetch('/api/owner/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pin: $('pin').value }) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) { $('loginErr').textContent = d.error || 'Login nahi hua'; return; }
+  $('pin').value = ''; $('login').style.display = 'none'; beep(0.0001); refresh(true);
+}
+$('loginGo').onclick = doLogin;
+$('pin').onkeydown = (e) => { if (e.key === 'Enter') doLogin(); };
+$('bOut').onclick = async () => { await fetch('/api/owner/logout', { method: 'POST' }); showLogin(); };
+
+// ---------------- orders
+let orders = [];
+let known = new Set();
+let first = true;
+function ago(ts) {
+  const m = Math.floor((Date.now() - ts) / 60000);
+  return m < 1 ? 'abhi abhi' : m < 60 ? m + ' min pehle' : Math.floor(m / 60) + ' ghante pehle';
+}
+function render() {
+  document.title = (orders.length ? `(${orders.length}) ` : '') + 'Canara Print - Shop Owner';
+  const box = $('list');
+  if (!orders.length) { box.innerHTML = '<div class="empty"><div>Abhi koi pending print order nahi hai.<br>Customer QR scan karke file upload kar sakte hain.</div></div>'; return; }
+  box.innerHTML = orders.map((o) => `
+    <div class="o" data-id="${esc(o.id)}">
+      <div class="code">#${esc(o.code)}</div>
+      <div class="info"><b>${esc(o.name)}</b> <span style="color:#94a3b8;font-size:13px">• ${ago(o.created)}</span>
+        <div class="tags"><span>${o.pages} page</span><span>${o.copies} copy</span>
+          <span class="${o.color === 'color' ? 'col' : ''}">${o.color === 'color' ? '🎨 Color' : '⚫ B/W'}</span>
+          <span>${o.duplex ? 'Double side' : 'Single side'}</span></div></div>
+      <div class="acts"><button class="btn b" data-a="prev">👁 Preview</button><button class="btn g" data-a="print">🖨 Print</button><button class="btn r" data-a="rej">✕</button></div>
+    </div>`).join('');
+}
+function beep(vol = 0.2) {
+  try {
+    const c = new (window.AudioContext || window.webkitAudioContext)();
+    [880, 1175].forEach((f, i) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.frequency.value = f; g.gain.value = vol; o.connect(g); g.connect(c.destination);
+      o.start(c.currentTime + i * 0.18); o.stop(c.currentTime + i * 0.18 + 0.15);
+    });
+  } catch (_) {}
+}
+async function refresh(manual) {
+  if ($('login').style.display === 'grid') return;
+  try {
+    if (manual) setStatus('Orders la raha hoon...');
+    const d = await (await api('/api/owner/orders')).json();
+    $('shop').textContent = d.name || 'Canara Print';
+    orders = d.orders;
+    const fresh = orders.filter((o) => !known.has(o.id));
+    orders.forEach((o) => known.add(o.id));
+    if (fresh.length && !first && get('sound', '1') === '1') beep();
+    first = false;
+    render();
+    setStatus(orders.length ? orders.length + ' pending order' : 'Naye order ka intezaar...');
+  } catch (e) { if (e.message !== 'login') setStatus('⚠ Server se connect nahi ho paya (1 minute me khud jud jayega)'); }
+}
+$('bRef').onclick = () => refresh(true);
+
+// ---------------- printing: PDF -> page images -> browser print
+let current = null;
+async function loadPages(id) {
+  const buf = await (await api(`/api/owner/orders/${id}/file`)).arrayBuffer();
+  const doc = await pdfjs.getDocument({ data: new Uint8Array(buf) }).promise;
+  const imgs = [];
+  for (let i = 1; i <= doc.numPages; i++) {
+    const page = await doc.getPage(i);
+    const v1 = page.getViewport({ scale: 1 });
+    const scale = 1754 / Math.max(v1.width, v1.height); // ~150 dpi on A4
+    const vp = page.getViewport({ scale });
+    const cv = document.createElement('canvas');
+    cv.width = Math.round(vp.width); cv.height = Math.round(vp.height);
+    await page.render({ canvasContext: cv.getContext('2d'), viewport: vp, background: '#ffffff' }).promise;
+    imgs.push({ src: cv.toDataURL('image/jpeg', 0.92), land: vp.width > vp.height });
+    setStatus(`Taiyar ho raha hai... ${i}/${doc.numPages}`);
+  }
+  return imgs;
+}
+function fillPrintArea(imgs, copies) {
+  const area = $('printArea');
+  area.innerHTML = '';
+  for (let c = 0; c < copies; c++) for (const p of imgs) {
+    const im = new Image(); im.src = p.src; if (p.land) im.className = 'land'; area.appendChild(im);
+  }
+}
+async function startPrint(id, btn) {
+  const o = orders.find((x) => x.id === id);
+  if (!o) return;
+  btn.disabled = true;
+  try {
+    const imgs = await loadPages(id);
+    current = { o, imgs };
+    fillPrintArea(imgs, o.copies);
+    $('pbText').textContent = `#${o.code} ${o.name} - ${o.pages} page x ${o.copies} copy ` + (o.color === 'color' ? '(Color)' : '(B/W)') + (o.duplex ? ' - Double side chuniye' : '');
+    $('printbar').style.display = 'flex';
+    setStatus('Print window khul rahi hai...');
+    setTimeout(() => { window.print(); setStatus('Print bhej diya. Sab theek ho to "Print ho gaya" dabaiye.'); if (get('autodone', '0') === '1') finishCurrent(); }, 250);
+  } catch (e) { if (e.message !== 'login') setStatus('⚠ Print ke liye file nahi khul payi: ' + e.message); }
+  btn.disabled = false;
+}
+async function finishCurrent() {
+  if (!current) return;
+  const id = current.o.id;
+  current = null; $('printbar').style.display = 'none'; $('printArea').innerHTML = '';
+  try { await post(`/api/owner/orders/${id}/done`); setStatus('✅ Order complete, customer ko dikh gaya'); } catch (_) {}
+  refresh();
+}
+$('pbDone').onclick = finishCurrent;
+$('pbAgain').onclick = () => { if (current) window.print(); };
+$('pbCancel').onclick = () => { current = null; $('printbar').style.display = 'none'; $('printArea').innerHTML = ''; setStatus('Cancel kiya. Order abhi bhi list me hai.'); };
+
+$('list').addEventListener('click', async (e) => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  const id = btn.closest('.o').dataset.id;
+  const a = btn.dataset.a;
+  if (a === 'print') startPrint(id, btn);
+  if (a === 'prev') window.open(`/api/owner/orders/${id}/file`, '_blank');
+  if (a === 'rej') { if (confirm('Ye order reject karna hai?')) { await post(`/api/owner/orders/${id}/reject`); refresh(); } }
+});
+
+// ---------------- dialogs
+const closeDlg = () => { $('ov').style.display = 'none'; };
+const openDlg = (html) => { $('dlg').innerHTML = html; $('ov').style.display = 'grid'; };
+
+function qrCanvas(text, size) {
+  const q = window.makeQR(text);
+  const quiet = 3, n = q.count + quiet * 2;
+  const cv = document.createElement('canvas'); cv.width = cv.height = size;
+  const c = cv.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, size, size); c.fillStyle = '#000';
+  const cell = size / n;
+  for (let r = 0; r < q.count; r++) for (let k = 0; k < q.count; k++) if (q.isDark(r, k)) c.fillRect(Math.floor((k + quiet) * cell), Math.floor((r + quiet) * cell), Math.ceil(cell), Math.ceil(cell));
+  return cv;
+}
+$('bQr').onclick = () => {
+  const url = location.origin + '/';
+  const png = qrCanvas(url, 900).toDataURL('image/png');
+  const w = window.open('', '_blank');
+  if (!w) { setStatus('Popup block hai - address bar me popup allow kijiye'); return; }
+  w.document.write(`<!doctype html><title>Print Your QR</title><body style="font-family:Segoe UI,Arial;text-align:center;margin:0;padding:30px">
+    <h1 style="color:#000080;font-size:46px;margin:0">${esc($('shop').textContent)}</h1>
+    <p style="font-size:22px;color:#334155">QR scan karo &rarr; file upload karo &rarr; print pao</p>
+    <img src="${png}" style="width:460px;height:460px">
+    <p style="font-size:14px;color:#64748b">${esc(url)}</p>
+    <p style="font-size:12px;color:#94a3b8">Developed By Aryaman Digital Studio</p>
+    <button onclick="window.print()" id="b" style="font-size:18px;padding:10px 28px">Print QR</button>
+    <style>@media print{#b{display:none}}</style></body>`);
+  w.document.close();
+};
+$('bHelp').onclick = () => {
+  openDlg(`<h2>Print Settings</h2>
+    <label class="ck"><input type="checkbox" id="oSound" ${get('sound', '1') === '1' ? 'checked' : ''}> Naya order aane par awaaz</label>
+    <label class="ck"><input type="checkbox" id="oAuto" ${get('autodone', '0') === '1' ? 'checked' : ''}> Print bhejte hi order ko "complete" mark kar do</label>
+    <h3 style="margin:18px 0 6px">Seedha print (bina window ke)</h3>
+    <p style="margin:0 0 6px;font-size:14px;color:#475569">Chrome ka shortcut banao: Desktop par right-click &rarr; New &rarr; Shortcut, aur ye likho:</p>
+    <p><code>"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" --kiosk-printing ${esc(location.origin)}/owner</code></p>
+    <p style="font-size:13px;color:#64748b">Is shortcut se kholne par Print dabate hi file seedha <b>Windows ke default printer</b> par chali jati hai. Printer badalna ho to Windows Settings me default printer badliye. (Browser me B/W aur Color printer alag-alag apne aap nahi chun sakta.)</p>
+    <div class="row"><button class="btn b" id="oSave">Save</button><button class="btn i" id="oClose">Close</button></div>`);
+  $('oClose').onclick = closeDlg;
+  $('oSave').onclick = () => { put('sound', $('oSound').checked ? '1' : '0'); put('autodone', $('oAuto').checked ? '1' : '0'); closeDlg(); setStatus('Save ho gaya'); };
+};
+
+// ---------------- start
+(async () => {
+  const r = await fetch('/api/owner/orders');
+  if (r.status === 401) showLogin(); else refresh(true);
+  setInterval(() => { if (!current) refresh(false); }, 5000);
+})();
+</script>
+</body>
+</html>
